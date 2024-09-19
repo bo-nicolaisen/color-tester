@@ -93,18 +93,19 @@ function colorCallback() {
 
     let test = 0
 
-    if (selectedColor.hsl.h <= myH + myLevel && selectedColor.hsl.h >= myH - myLevel) {
-        console.log('H ok');
+    if (myH <= selectedColor.hsl.h + myLevel && myH >= selectedColor.hsl.h - myLevel) {
+
         test++
     }
 
-    if (selectedColor.hsl.s <= myS + myLevel && selectedColor.hsl.s >= myS - myLevel) {
-        console.log('S ok');
+    if (myS <= selectedColor.hsl.s + myLevel && myS >= selectedColor.hsl.s - myLevel) {
+
         test++
     }
 
-    if (selectedColor.hsl.l <= myL + myLevel && selectedColor.hsl.l >= myL - myLevel) {
-        console.log('L ok');
+    if (myL <= selectedColor.hsl.l + myLevel && myL >= selectedColor.hsl.l - myLevel) {
+
+
         test++
     }
 
