@@ -12,10 +12,10 @@ let allColors = []
 //console.log(supabase);
 
 
-getColors()
 
 
-async function getColors() {
+
+export default async function getColors() {
     const { data, error } = await supabase
         .from('colors')
         .select()
