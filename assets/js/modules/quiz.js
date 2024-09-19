@@ -1,15 +1,9 @@
+import supabase from "./model.js"
 
-
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const supabaseUrl = 'https://gbcpbrlqpjrawbsytxex.supabase.co';
-const supabaseKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiY3BicmxxcGpyYXdic3l0eGV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY3MjM2NjcsImV4cCI6MjA0MjI5OTY2N30.3MAI1pcCl8fKh826j3VPGR09F3uyXHJ0byqNEggRMfg";
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-let selectedColor = ''
+let selectedColor = { id: 'none' }
 let allColors = []
-//console.log(supabase);
+let lastId = 'new'
+
 
 
 
@@ -24,10 +18,19 @@ export default async function getColors() {
 }
 
 function getRandomColor() {
-
-
+    console.log('getRandomColor');
     const randomIndex = Math.floor(Math.random() * allColors.length)
     selectedColor = allColors[randomIndex]
+
+    while (lastId == selectedColor.id) {
+        console.log('finding new');
+
+        const randomIndex = Math.floor(Math.random() * allColors.length)
+        selectedColor = allColors[randomIndex]
+    }
+
+
+    lastId = selectedColor.id
     buildColorQuiz()
 
 }
@@ -35,22 +38,41 @@ function getRandomColor() {
 
 function buildColorQuiz() {
 
-    let myQuizElement = document.getElementById('colorQuiz')
-    let myHTML = '<h1>Color test</h1>'
+    let myQuizElement = document.getElementById('app')
+    let myHTML = '<section class="quiz"> <h1>Color Challenge</h1>'
 
     // svg
     myHTML += `<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg"><rect id="colorTile" width="250" height="250" x="25" y="25" fill="hsl(${selectedColor.hsl.h},${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)"/></svg>`
 
     myHTML += `<button id="new">ny farve</button>`
 
-    myHTML += `<span>H <input id="h" type="range" min="0" max="360" value="50" class="slider"></span>`
-    myHTML += `<span>S <input id="s" type="range" min="0" max="360" value="50" class="slider"></span>`
-    myHTML += `<span>L <input id="l" type="range" min="0" max="360" value="50" class="slider"></span>`
+    myHTML += `<span>H <input id="h" type="range" min="0" max="360" value="0" class="slider"> <div id="hVal">0&deg</div></span>`
+    myHTML += `<span>S <input id="s" type="range" min="0" max="100" value="0" class="slider"><div id="sVal">0%</div></span>`
+    myHTML += `<span>L <input id="l" type="range" min="0" max="100" value="0" class="slider"><div id="lVal">0%</div></span>`
+
+    myHTML += `<div id="feedback"></div>`
 
     myHTML += `<button id="svar">svar</button>`
-
+    myHTML += `</section>`
 
     myQuizElement.innerHTML = myHTML
+
+    /// realtime sliders
+    document.getElementById('h').addEventListener('input', (e) => {
+        document.getElementById('hVal').innerHTML = `${e.target.value}&deg`
+    })
+    document.getElementById('s').addEventListener('input', (e) => {
+        document.getElementById('sVal').innerText = `${e.target.value}%`
+    })
+    document.getElementById('l').addEventListener('input', (e) => {
+        document.getElementById('lVal').innerText = `${e.target.value}%`
+    })
+    ///
+
+
+
+
+
 
     document.getElementById('svar').addEventListener('click', (e) => {
         colorCallback()
@@ -62,12 +84,38 @@ function buildColorQuiz() {
 }
 
 function colorCallback() {
-    console.log('butt');
+    console.log('ansver');
     let myH = document.getElementById("h").value
     let myS = document.getElementById("s").value
     let myL = document.getElementById("l").value
 
-    console.log(myH, myL, myS);
+    let myLevel = 10
 
+    let test = 0
+
+    if (selectedColor.hsl.h <= myH + myLevel && selectedColor.hsl.h >= myH - myLevel) {
+        console.log('H ok');
+        test++
+    }
+
+    if (selectedColor.hsl.s <= myS + myLevel && selectedColor.hsl.s >= myS - myLevel) {
+        console.log('S ok');
+        test++
+    }
+
+    if (selectedColor.hsl.l <= myL + myLevel && selectedColor.hsl.l >= myL - myLevel) {
+        console.log('L ok');
+        test++
+    }
+
+    if (test == 3) {
+        console.log('yay');
+        document.getElementById('feedback').innerHTML = `Sådan den rigtigr farve er:<br>"hsl(${selectedColor.hsl.h}&deg,${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)"`
+
+    } else {
+        console.log(`nope`);
+        document.getElementById('feedback').innerHTML = `forkert!`
+
+    }
 
 }
