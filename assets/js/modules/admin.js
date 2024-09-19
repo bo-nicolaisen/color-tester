@@ -38,6 +38,11 @@ function buildColorView() {
         let myTile = document.createElement('figure')
 
         myTile.innerHTML = `${createTile(colorData.hsl)}<span><h3>${colorData.name}</h3>h:${colorData.hsl.h}&deg  s:${colorData.hsl.s}%  l:${colorData.hsl.l}%</span>`
+
+
+        let myButtons = document.createElement('div')
+        myButtons.id = "tileButtons"
+
         let editbutton = document.createElement('button')
         editbutton.innerText = 'edit'
 
@@ -45,8 +50,20 @@ function buildColorView() {
             editView(index)
         })
 
-        myTile.appendChild(editbutton)
+        myButtons.appendChild(editbutton)
 
+
+        let deleteButton = document.createElement('button')
+        deleteButton.innerText = 'Delete'
+
+        deleteButton.addEventListener('click', (e) => {
+
+            deleteColor(index)
+        })
+
+        myButtons.appendChild(deleteButton)
+
+        myTile.appendChild(myButtons)
         myColortiles.appendChild(myTile)
     });
 
@@ -168,4 +185,15 @@ function newColor() {
         name: 'new color'
     }
     return newColor
+}
+
+async function deleteColor(index) {
+
+    allColors[index].id
+    const response = await supabase
+        .from('colors')
+        .delete()
+        .eq('id', allColors[index].id)
+
+    getColors()
 }

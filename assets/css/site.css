@@ -60,8 +60,12 @@ ul {
 }
 
 .colorList figure button {
+  margin: 0px;
+  padding: 0px;
+}
+.colorList figure #tileButtons {
   position: absolute;
-  left: 0px;
+  right: 0px;
   bottom: 0px;
 }
 

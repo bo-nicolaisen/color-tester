@@ -39,7 +39,7 @@ function getRandomColor() {
 function buildColorQuiz() {
 
     let myQuizElement = document.getElementById('app')
-    let myHTML = '<section class="quiz"> <h1>Color test</h1>'
+    let myHTML = '<section class="quiz"> <h1>Color Challenge</h1>'
 
     // svg
     myHTML += `<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg"><rect id="colorTile" width="250" height="250" x="25" y="25" fill="hsl(${selectedColor.hsl.h},${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)"/></svg>`
