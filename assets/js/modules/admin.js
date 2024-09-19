@@ -1,15 +1,11 @@
 import supabase from "./model.js"
 
-
 let selectedColor = ''
 let allColors = []
-//console.log(supabase);
-
 
 export default function initAdmin() {
     getColors()
 }
-
 
 async function getColors() {
     const { data, error } = await supabase
@@ -20,13 +16,20 @@ async function getColors() {
     buildColorView()
 }
 
-
 function buildColorView() {
-
-
 
     let myAppElement = document.getElementById('app')
     myAppElement.innerHTML = ''
+
+    let newButton = document.createElement('button')
+    newButton.innerText = '+'
+
+    newButton.addEventListener('click', (e) => {
+        editView('new')
+    })
+
+    myAppElement.appendChild(newButton)
+
     let myColortiles = document.createElement('section')
     myColortiles.classList.add('colorList')
 
@@ -34,7 +37,7 @@ function buildColorView() {
 
         let myTile = document.createElement('figure')
 
-        myTile.innerHTML = `${createTile(colorData.hsl)}<h3>${colorData.name}</h3><span>h:${colorData.hsl.h}&deg  s:${colorData.hsl.s}%  l:${colorData.hsl.l}%</span>`
+        myTile.innerHTML = `${createTile(colorData.hsl)}<span><h3>${colorData.name}</h3>h:${colorData.hsl.h}&deg  s:${colorData.hsl.s}%  l:${colorData.hsl.l}%</span>`
         let editbutton = document.createElement('button')
         editbutton.innerText = 'edit'
 
@@ -50,20 +53,19 @@ function buildColorView() {
 
     myAppElement.appendChild(myColortiles)
 
-    let newButton = document.createElement('button')
-    newButton.innerText = 'new color'
 
-    newButton.addEventListener('click', (e) => {
-        editView('new')
-    })
 
-    myAppElement.appendChild(newButton)
+
+
+
+
+
 
 
 }
 
 function createTile(hsl) {
-    return `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect id="colorTile" width="250" height="250" x="25" y="25" fill="hsl(${hsl.h},${hsl.s}%, ${hsl.l}%)"/></svg>`
+    return `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect id="colorTile" width="250" height="250" x="0" y="0" fill="hsl(${hsl.h},${hsl.s}%, ${hsl.l}%)"/></svg>`
 
 }
 
@@ -86,7 +88,7 @@ function buildEditView() {
         selectedColor = newColor()
     }
 
-    console.log(selectedColor);
+    //console.log(selectedColor);
 
     let myAppElement = document.getElementById('app')
     let myHTML = '<section class="quiz"> <h1>Color test</h1>'
@@ -94,14 +96,14 @@ function buildEditView() {
     // svg
     myHTML += `<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg"><rect id="colorTile" width="250" height="250" x="25" y="25" fill="hsl(${selectedColor.hsl.h},${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)"/></svg>`
 
+    myHTML += `<span>H <input id="myName" type="text" value="${selectedColor.name}"></span>`
 
+    myHTML += `<span>H <input id="h" type="range" min="0" max="360" value="${selectedColor.hsl.h}" class="slider"> <div id="hVal">${selectedColor.hsl.h}&deg</div></span>`
+    myHTML += `<span>S <input id="s" type="range" min="0" max="100" value="${selectedColor.hsl.s}" class="slider"><div id="hVal">${selectedColor.hsl.s}%</div></span>`
+    myHTML += `<span>L <input id="l" type="range" min="0" max="100" value="${selectedColor.hsl.l}" class="slider"><div id="hVal">${selectedColor.hsl.l}%</div></span>`
 
-    myHTML += `<span>H <input id="h" type="range" min="0" max="360" value="50" class="slider"></span>`
-    myHTML += `<span>S <input id="s" type="range" min="0" max="100" value="50" class="slider"></span>`
-    myHTML += `<span>L <input id="l" type="range" min="0" max="100" value="50" class="slider"></span>`
-
-    myHTML += `<button id="done">gem</button>`
-    myHTML += `<button id="cancel">cancel</button>`
+    myHTML += `<div class="buttonRow"><button id="done">gem</button>`
+    myHTML += `<button id="cancel">cancel</button></div>`
     myHTML += `</section>`
 
     myAppElement.innerHTML = myHTML
@@ -109,26 +111,31 @@ function buildEditView() {
     // svg box
     let colorTile = document.getElementById('colorTile')
     // color controls
-    document.getElementById('h').addEventListener('change', (e) => {
+    document.getElementById('h').addEventListener('input', (e) => {
         selectedColor.hsl.h = e.target.value
+        document.getElementById('hVal').innerHTML = `${e.target.value}&deg`
         let color = `hsl(${selectedColor.hsl.h},${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)`
         colorTile.setAttribute("fill", color);
     })
 
-    document.getElementById('s').addEventListener('change', (e) => {
+    document.getElementById('s').addEventListener('input', (e) => {
         selectedColor.hsl.s = e.target.value
+        document.getElementById('sVal').innerText = `${e.target.value}%`
         let color = `hsl(${selectedColor.hsl.h},${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)`
         colorTile.setAttribute("fill", color);
     })
 
-    document.getElementById('l').addEventListener('change', (e) => {
+    document.getElementById('l').addEventListener('input', (e) => {
         selectedColor.hsl.l = e.target.value
+        document.getElementById('lVal').innerText = `${e.target.value}%`
         let color = `hsl(${selectedColor.hsl.h},${selectedColor.hsl.s}%, ${selectedColor.hsl.l}%)`
         colorTile.setAttribute("fill", color);
     })
 
     // main controlls
     document.getElementById('done').addEventListener('click', (e) => {
+        selectedColor.name = document.getElementById('myName').value
+
         makeEditColor()
     })
     document.getElementById('cancel').addEventListener('click', (e) => {
@@ -138,21 +145,25 @@ function buildEditView() {
 
 async function makeEditColor() {
 
-    console.log(selectedColor);
+    console.log();
+    if (selectedColor.id) {
 
-    const { error } = await supabase
-        .from('colors')
-        .insert({ name: selectedColor.name, hsl: selectedColor.hsl, description: selectedColor.description })
+        const { error } = await supabase
+            .from('colors')
+            .update({ name: selectedColor.name, hsl: selectedColor.hsl, description: selectedColor.description })
+            .eq('id', selectedColor.id)
 
-    console.log(error);
-
+    } else {
+        const { error } = await supabase
+            .from('colors')
+            .insert({ name: selectedColor.name, hsl: selectedColor.hsl, description: selectedColor.description })
+    }
     getColors()
 }
 
 function newColor() {
-
     let newColor = {
-        hsl: { h: 100, s: 100, l: 100 },
+        hsl: { h: 100, s: 100, l: 50 },
         description: 'new color',
         name: 'new color'
     }
