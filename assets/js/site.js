@@ -18,6 +18,10 @@ export function setLogin(state) {
     loggedin = state
 }
 
+export function setState(myIncommingState) {
+    myState = myIncommingState
+}
+
 export default function initGame() {
     myState = "game"
     adminButton.innerText = 'admin'

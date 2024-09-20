@@ -1,7 +1,7 @@
 import { loginUser } from "./model.js"
 import initAdmin from "./admin.js";
 import initGame from "../site.js";
-import setLogin from "../site.js";
+import { setLogin, setState } from "../site.js";
 
 export default async function createLoginForm() {
 
@@ -43,11 +43,12 @@ export default async function createLoginForm() {
                     if (data.user) {
                         console.log('Login successful');
                         setLogin(true);
+                        setState('admin');
+                        document.getElementById('admin').innerText = 'done'
                         initAdmin();
 
                     } else {
                         console.log('Login failed');
-
                         setLogin(false);
                         initGame()
                     }
