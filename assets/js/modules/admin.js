@@ -116,8 +116,8 @@ function buildEditView() {
     myHTML += `<span>H <input id="myName" type="text" value="${selectedColor.name}"></span>`
 
     myHTML += `<span>H <input id="h" type="range" min="0" max="360" value="${selectedColor.hsl.h}" class="slider"> <div id="hVal">${selectedColor.hsl.h}&deg</div></span>`
-    myHTML += `<span>S <input id="s" type="range" min="0" max="100" value="${selectedColor.hsl.s}" class="slider"><div id="hVal">${selectedColor.hsl.s}%</div></span>`
-    myHTML += `<span>L <input id="l" type="range" min="0" max="100" value="${selectedColor.hsl.l}" class="slider"><div id="hVal">${selectedColor.hsl.l}%</div></span>`
+    myHTML += `<span>S <input id="s" type="range" min="0" max="100" value="${selectedColor.hsl.s}" class="slider"><div id="sVal">${selectedColor.hsl.s}%</div></span>`
+    myHTML += `<span>L <input id="l" type="range" min="0" max="100" value="${selectedColor.hsl.l}" class="slider"><div id="lVal">${selectedColor.hsl.l}%</div></span>`
 
     myHTML += `<div class="buttonRow"><button id="done">gem</button>`
     myHTML += `<button id="cancel">cancel</button></div>`
