@@ -15,19 +15,26 @@ export default async function createLoginForm() {
         <form id="loginForm">
             <div>
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" >
             </div>
             <div>
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" >
             </div>
             <div>
                 <button id="loginButton">Login</button>
+                <button id="cancelButton">cancel</button>
             </div>
         </form>
     `;
 
     app.innerHTML = formTemplate;
+
+    const cancelButton = document.getElementById('loginButton');
+    cancelButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        initGame()
+    })
 
     const loginButton = document.getElementById('loginButton');
     loginButton.addEventListener('click', (e) => {
@@ -57,8 +64,7 @@ export default async function createLoginForm() {
     })
 }
 
-// Call the function to create the login form
-//createLoginForm();
+
 
 
 

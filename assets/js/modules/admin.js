@@ -1,4 +1,6 @@
 import supabase from "./model.js"
+import { logOut } from "./model.js"
+import initGame from "../site.js";
 
 let selectedColor = ''
 let allColors = []
@@ -29,6 +31,20 @@ function buildColorView() {
     })
 
     myAppElement.appendChild(newButton)
+
+
+    let logOutButton = document.createElement('button')
+    logOutButton.innerText = 'Log Out'
+
+    logOutButton.addEventListener('click', (e) => {
+
+        logOut()
+        initGame()
+    })
+
+
+
+    myAppElement.appendChild(logOutButton)
 
     let myColortiles = document.createElement('section')
     myColortiles.classList.add('colorList')
@@ -69,14 +85,6 @@ function buildColorView() {
 
 
     myAppElement.appendChild(myColortiles)
-
-
-
-
-
-
-
-
 
 
 }
@@ -189,7 +197,7 @@ function newColor() {
 
 async function deleteColor(index) {
 
-    allColors[index].id
+
     const response = await supabase
         .from('colors')
         .delete()

@@ -1,7 +1,7 @@
 
 
 import getColors from "./modules/quiz.js";
-import { loginUser, createUser } from "./modules/model.js"
+import { loginUser, createUser, checkLoginStatus } from "./modules/model.js"
 import initAdmin from "./modules/admin.js";
 import createLoginForm from "./modules/login.js";
 
@@ -32,22 +32,25 @@ export default function initGame() {
 
 adminButton.addEventListener('click', () => {
     if (myState == "game") {
-        if (loggedin) {
-            myState = 'admin'
-            adminButton.innerText = 'done'
-            initAdmin()
 
-        } else {
-            createLoginForm()
-        }
+        checkLoginStatus()
+            .then((data) => {
+                console.log(data.user)
+                if (data.user) {
+                    myState = 'admin'
+                    adminButton.innerText = 'done'
+                    initAdmin()
 
+                } else {
 
+                    createLoginForm()
+                }
+            })
 
     } else {
         myState = 'game'
         adminButton.innerText = 'admin'
         getColors()
-
     }
 
 })

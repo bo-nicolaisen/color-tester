@@ -33,6 +33,22 @@ export async function createUser(email, pass) {
     })
 }
 
+export async function checkLoginStatus() {
+    const { data } = await supabase.auth.getSession();
 
+    if (data.session) {
+        console.log('User is logged in:');
+        return data.session
+    } else {
+        console.log('No active session found');
+        return false
+    }
+
+}
+
+export async function logOut() {
+    supabase.auth.signOut()
+        .then(console.log('logged out'))
+}
 
 
