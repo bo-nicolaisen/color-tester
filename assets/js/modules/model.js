@@ -14,9 +14,11 @@ export default supabase
 export async function loginUser(email, pass) {
     console.log(email, pass);
 
-    supabase.auth.signInWithPassword({ email: email, password: pass })
+    return supabase.auth.signInWithPassword({ email: email, password: pass })
         .then((response) => {
-            response.error ? alert(response.error.message) : console.log(response)
+            console.log(response.data);
+
+            return response.data
         })
         .catch((err) => {
             alert(err.response.text)
